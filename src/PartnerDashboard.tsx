@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { supabase, isSupabaseConfigured } from "./lib/supabase";
 import { CalendarDays, Check, CirclePause, CirclePlay, LayoutDashboard, LogOut, Plus, Search, Table2, Utensils, X } from "lucide-react";
 
