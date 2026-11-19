@@ -387,3 +387,277 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .prototype-banner{min-height:32px;padding:7px 20px;display:flex;align-items:center;justify-content:center;gap:9px;background:#fff2df;color:#7b4b16;font-size:10px;font-weight:800;letter-spacing:.11em;text-align:center}.prototype-banner>span:last-child{font-weight:600;letter-spacing:0;color:#8b6842}.prototype-banner-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#d88a31;box-shadow:0 0 0 3px #f8dfbf}@media(max-width:600px){.prototype-banner{padding:7px 10px;flex-wrap:wrap;gap:5px;font-size:9px}.prototype-banner>span:last-child{width:100%;font-size:10px}}
 
 .demo-guide-page{max-width:1180px;margin:0 auto;padding:72px 28px 64px;min-height:72vh}.demo-guide-hero{max-width:720px;margin:0 auto 42px;text-align:center}.demo-guide-hero h1{font-size:clamp(42px,6vw,68px);line-height:1.02;letter-spacing:-.055em;margin:15px 0}.demo-guide-hero h1 em{font-family:Georgia,serif;font-weight:400;color:#b77b48}.demo-guide-hero>p{max-width:610px;margin:0 auto;color:#77716a;font-size:15px;line-height:1.8}.demo-guide-tag{display:inline-block;margin-top:22px;padding:9px 13px;border-radius:30px;background:#fff3e3;color:#95612c;font-size:10px;font-weight:800;letter-spacing:.09em}.demo-guide-layout{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.4fr);gap:22px;align-items:start}.demo-role-list,.demo-role-detail{background:#fff;border:1px solid #eee9e2;border-radius:18px;padding:22px;box-shadow:0 12px 40px #34271908}.demo-role-list>.section-kicker{margin:2px 0 14px 4px}.demo-role-card{width:100%;display:flex;align-items:center;gap:13px;padding:15px 12px;border:1px solid transparent;border-radius:12px;background:transparent;text-align:left;cursor:pointer;color:#29251f;transition:.2s}.demo-role-card:hover,.demo-role-card.active{background:#fbf4eb;border-color:#ead7c2}.demo-role-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#f4eee7;color:#a66d3e;flex:0 0 40px}.demo-role-card>span:nth-child(2){flex:1;min-width:0}.demo-role-card strong,.demo-role-card small{display:block}.demo-role-card strong{font-size:14px}.demo-role-card small{font-size:11px;color:#898078;margin-top:4px;line-height:1.4}.demo-role-card>svg{color:#a77a51}.demo-role-detail{padding:30px}.demo-role-detail h2{font-size:30px;letter-spacing:-.04em;margin:12px 0}.demo-role-detail>p{color:#77716a;font-size:14px;line-height:1.75;max-width:620px}.demo-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px 0}.demo-stat{min-height:74px;padding:13px;background:#faf7f2;border-radius:11px;display:flex;align-items:center}.demo-stat strong{font-size:12px;line-height:1.5;color:#574b3f}.demo-steps{border-top:1px solid #eee9e2;padding-top:20px}.demo-steps>strong{font-size:13px}.demo-step{display:flex;gap:13px;align-items:center;padding:12px 0;color:#625b53;font-size:13px}.demo-step span{font-size:10px;font-weight:800;color:#b77b48;letter-spacing:.08em}.demo-open-button{margin-top:16px}.demo-preview-note{display:flex;gap:9px;padding:14px;background:#f3f7f0;color:#52634a;border-radius:10px;font-size:12px;line-height:1.6;margin-top:20px}.demo-guide-footer{display:flex;justify-content:space-between;gap:12px;margin-top:26px;color:#9a9289;font-size:11px}@media(max-width:760px){.demo-guide-page{padding:46px 16px}.demo-guide-layout{grid-template-columns:1fr}.demo-role-detail{padding:23px}.demo-guide-footer{flex-direction:column}.demo-guide-hero h1{font-size:46px}}@media(max-width:430px){.demo-stat-grid{grid-template-columns:1fr}.demo-stat{min-height:50px}.demo-role-card{padding:12px 8px}}
+
+
+/* Visual refinement: clearer type scale, calmer rhythm, and more generous spacing. */
+:root {
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  font-optical-sizing: auto;
+  --text-primary: #203329;
+  --text-secondary: #68776d;
+  --text-subtle: #87938a;
+  --surface: #ffffff;
+  --surface-soft: #f2f6ee;
+  --radius-card: 16px;
+}
+body { color: var(--text-primary); line-height: 1.6; }
+button, input, select, textarea { font-family: inherit; }
+h1, h2, h3, h4, .brand, .owner-brand {
+  font-family: "Manrope", sans-serif;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+.topbar { min-height: 78px; padding-inline: max(6vw, 28px); }
+.brand { font-size: 21px; letter-spacing: -1px; }
+.desktop-nav { gap: clamp(18px, 2.3vw, 34px); }
+.nav-link { font-size: 13px; font-weight: 650; }
+.hero { min-height: 510px; padding-top: 76px; padding-bottom: 72px; gap: clamp(36px, 5vw, 76px); }
+.hero-content { max-width: 570px; }
+.eyebrow, .section-kicker { font-size: 10px; letter-spacing: 1.65px; }
+.hero h1, .partner-hero h1 { font-size: clamp(52px, 6vw, 78px); line-height: 1.04; letter-spacing: -.055em; margin: 22px 0 21px; }
+.hero-copy { font-size: 16px; line-height: 1.8; max-width: 490px; }
+.hero-proof { gap: 22px; font-size: 12px; }
+.hero-photo-wrap { height: 350px; }
+.photo-caption strong { font-size: 28px; }
+.main-content { max-width: 1280px; padding-inline: 32px; }
+.search-panel { padding: 16px; gap: 12px; border-radius: 17px; }
+.search-field { padding: 10px 13px; }
+.search-field label { gap: 6px; }
+.search-field label small { font-size: 9px; letter-spacing: 1.1px; }
+.search-field input, .search-field select { font-size: 14px; }
+.search-button { padding: 16px 24px; font-size: 13px; }
+.intro-row { margin: 88px 0 32px; }
+.intro-row h2, .how-copy h2 { font-size: clamp(34px, 3.6vw, 46px); letter-spacing: -.045em; line-height: 1.12; }
+.intro-row p, .how-copy p { font-size: 14px; line-height: 1.75; }
+.section-kicker { font-size: 9px; }
+.availability-note { padding: 13px 16px; }
+.availability-note strong { font-size: 12px; }
+.availability-note small { font-size: 11px; }
+.filter-row { padding-bottom: 20px; }
+.category-list { gap: 9px; }
+.category-chip { padding: 10px 15px; font-size: 12px; }
+.sort-control, .sort-control select { font-size: 12px; }
+.results-meta { padding: 23px 0 18px; font-size: 12px; }
+.results-meta strong { font-size: 14px; }
+.restaurant-grid { gap: 24px; }
+.restaurant-card { border-radius: var(--radius-card); }
+.card-image-wrap { height: 205px; }
+.card-body { padding: 19px 19px 17px; }
+.card-title-line h3 { font-size: 17px; letter-spacing: -.45px; }
+.rating { font-size: 12px; }
+.rating small { font-size: 10px; }
+.card-cuisine { font-size: 12px; margin: 7px 0 6px; }
+.card-area { font-size: 11px; }
+.price-block strong { font-size: 15px; }
+.price-block strong small, .price-block del { font-size: 10px; }
+.availability { font-size: 11px; }
+.availability small { font-size: 10px; }
+.card-book { padding: 12px; font-size: 12px; border-radius: 9px; }
+.discount-badge { font-size: 10px; padding: 8px 10px; }
+.how-section { gap: 7vw; padding: 112px 2px 108px; }
+.step { grid-template-columns: 36px 46px 1fr; gap: 19px; padding: 21px 0; }
+.step h3 { font-size: 15px; margin-bottom: 6px; }
+.step p { font-size: 12px; line-height: 1.75; }
+.partner-banner { padding: 54px 60px; border-radius: 20px; margin-bottom: 96px; }
+.partner-banner h2 { font-size: clamp(34px, 3.5vw, 42px); line-height: 1.12; letter-spacing: -.045em; }
+.partner-banner p { font-size: 13px; line-height: 1.8; }
+.partner-banner button { padding: 14px 20px; font-size: 12px; }
+.partner-stat { padding: 26px; }
+.partner-stat strong { font-size: 18px; }
+.partner-stat small { font-size: 11px; }
+.footer { font-size: 11px; padding-inline: max(6vw, 28px); }
+.partner-page { padding-top: 82px; padding-bottom: 100px; gap: 8vw; }
+.partner-hero h1 { line-height: 1.06; }
+.partner-hero p { font-size: 15px; line-height: 1.8; }
+.partner-benefits { font-size: 13px; gap: 15px; }
+.partner-form { padding: 32px; gap: 19px; border-radius: 20px; }
+.form-heading h2 { font-size: 21px; }
+.form-heading p { font-size: 12px; }
+.partner-form > label { font-size: 10px; letter-spacing: .8px; }
+.partner-form input, .partner-form select { padding: 14px 15px; font-size: 13px; border-radius: 10px; }
+.form-submit { padding: 15px 18px; font-size: 13px; }
+.form-disclaimer { font-size: 10px; }
+.partner-side-note h3 { font-size: 20px; }
+.partner-side-note p { font-size: 12px; }
+.mini-feature { font-size: 11px; }
+.booking-modal { border-radius: 20px; }
+.modal-content { padding: 27px 29px 30px; }
+.modal-content h2 { font-size: 28px; letter-spacing: -.045em; }
+.modal-meta { font-size: 12px; }
+.booking-option strong { font-size: 13px; }
+.booking-option span { font-size: 11px; }
+.availability-callout strong { font-size: 12px; }
+.availability-callout small { font-size: 10px; }
+.modal-footnote { font-size: 10px; }
+.toast { font-size: 12px; padding: 14px 20px; }
+
+/* Dashboard and admin labels were previously undersized; bring them to a readable scale. */
+.owner-main { padding-inline: clamp(24px, 4vw, 60px); }
+.owner-topbar>div:first-child { font-size: 11px; }
+.owner-demo-pill { font-size: 9px; }
+.owner-welcome { padding: 48px 0 29px; }
+.owner-welcome h1 { font-size: clamp(32px, 3.4vw, 42px); }
+.owner-welcome p { font-size: 13px; }
+.owner-primary-button { padding: 13px 18px; font-size: 11px; }
+.owner-stats { gap: 16px; }
+.owner-stat-card { padding: 21px; border-radius: 15px; }
+.owner-stat-label { font-size: 10px; }
+.owner-stat-card>strong { font-size: clamp(22px, 2vw, 29px); }
+.owner-stat-card>small { font-size: 10px; }
+.owner-content-grid { gap: 18px; margin-top: 20px; }
+.owner-panel { padding: 23px; border-radius: 15px; }
+.owner-panel-heading h2 { font-size: 16px; }
+.owner-panel-heading p { font-size: 10px; }
+.owner-listing-info strong, .owner-request-info strong { font-size: 11px; }
+.owner-listing-info small, .owner-request-info small { font-size: 10px; }
+.owner-listing-price { font-size: 11px; }
+.owner-status { font-size: 9px; }
+.owner-tip strong { font-size: 11px; }
+.owner-tip p { font-size: 10px; }
+.owner-table-head, .owner-booking-head { font-size: 8px; }
+.owner-table-line, .owner-booking-line { font-size: 10px; }
+.owner-table-line strong, .owner-booking-guest strong, .owner-booking-line>span>strong { font-size: 10px; }
+.owner-table-line small, .owner-booking-guest small, .owner-booking-line>span>small { font-size: 9px; }
+.owner-add-modal { padding: 30px; border-radius: 18px; }
+.owner-modal-heading h2 { font-size: 22px; }
+.owner-modal-heading p { font-size: 11px; }
+.owner-add-modal>label, .owner-form-grid label { font-size: 9px; }
+.owner-add-modal input, .owner-add-modal select { padding: 13px 14px; font-size: 12px; }
+.owner-toast { font-size: 11px; }
+.admin-page { padding-top: clamp(36px, 5vw, 70px); }
+.admin-login { padding: 36px; border-radius: 20px; }
+.admin-kicker { font-size: 10px; }
+.admin-login>p, .admin-header p { font-size: 14px; line-height: 1.75; }
+.admin-login label { font-size: 10px; }
+.admin-login input { padding: 14px; font-size: 13px; }
+.admin-primary, .admin-secondary, .admin-approve, .admin-reject { font-size: 11px; padding: 12px 15px; }
+.admin-stats { gap: 15px; }
+.admin-stats article { padding: 21px; border-radius: 15px; }
+.admin-stats span { font-size: 11px; }
+.admin-stats strong { font-size: 30px; }
+.admin-list-panel { padding: 26px; border-radius: 17px; }
+.admin-list-heading h2 { font-size: 19px; }
+.admin-list-heading p { font-size: 11px; }
+.admin-search { padding: 11px 13px; }
+.admin-search input { font-size: 12px; }
+.admin-filters button { font-size: 10px; padding: 8px 13px; }
+.admin-restaurant-main h3 { font-size: 14px; }
+.admin-restaurant-main p, .admin-restaurant-main small { font-size: 10px; }
+.admin-status { font-size: 9px; }
+.admin-security-note { font-size: 10px; }
+
+/* Guided tour: align it with the core TABLEX visual language. */
+.demo-guide-page { max-width: 1240px; padding: 82px 32px 72px; }
+.demo-guide-hero { margin-bottom: 48px; }
+.demo-guide-hero h1 { font-family: Manrope, sans-serif; font-size: clamp(46px, 6vw, 72px); letter-spacing: -.055em; line-height: 1.04; }
+.demo-guide-hero h1 em { font-family: Manrope, sans-serif; font-weight: 650; color: #83aa59; }
+.demo-guide-hero>p { font-size: 16px; line-height: 1.8; color: #69776d; }
+.demo-guide-tag { font-size: 11px; padding: 10px 15px; }
+.demo-guide-layout { gap: 25px; }
+.demo-role-list, .demo-role-detail { border-color: #e6ebe2; border-radius: 18px; padding: 25px; }
+.demo-role-card { padding: 17px 14px; }
+.demo-role-card strong { font-size: 15px; }
+.demo-role-card small { font-size: 12px; }
+.demo-role-detail { padding: 34px; }
+.demo-role-detail h2 { font-family: Manrope, sans-serif; font-size: 34px; letter-spacing: -.045em; line-height: 1.15; }
+.demo-role-detail>p { font-size: 15px; line-height: 1.8; color: #69776d; }
+.demo-stat { padding: 15px; }
+.demo-stat strong { font-size: 13px; }
+.demo-steps>strong { font-size: 14px; }
+.demo-step { font-size: 14px; padding: 14px 0; }
+.demo-preview-note { font-size: 13px; padding: 16px; }
+.demo-guide-footer { font-size: 12px; }
+
+@media (max-width: 1000px) {
+  .topbar { padding-inline: 24px; }
+  .hero { gap: 28px; }
+  .hero h1 { letter-spacing: -.05em; }
+  .partner-page { gap: 36px; }
+}
+@media (max-width: 720px) {
+  body { font-size: 15px; }
+  .topbar { height: 68px; min-height: 68px; padding-inline: 17px; }
+  .brand { font-size: 19px; }
+  .hero { padding: 53px 22px 67px; }
+  .hero h1 { font-size: clamp(48px, 12.5vw, 64px); line-height: 1.05; letter-spacing: -.055em; }
+  .hero-copy { font-size: 14px; line-height: 1.75; }
+  .hero-proof { font-size: 11px; line-height: 1.5; }
+  .hero-photo-wrap { height: 250px; }
+  .main-content { padding-inline: 17px; }
+  .search-panel { padding: 12px; border-radius: 14px; }
+  .search-field label small { font-size: 9px; }
+  .search-field input, .search-field select { font-size: 13px; }
+  .search-button { font-size: 13px; padding: 14px; }
+  .intro-row { margin: 58px 0 22px; }
+  .intro-row h2 { font-size: 34px; line-height: 1.12; letter-spacing: -.045em; }
+  .intro-row p, .how-copy p { font-size: 13px; line-height: 1.7; }
+  .availability-note strong { font-size: 11px; }
+  .availability-note small { font-size: 10px; }
+  .category-chip { font-size: 11px; padding: 9px 13px; }
+  .sort-control, .sort-control select { font-size: 11px; }
+  .results-meta { font-size: 11px; }
+  .results-meta strong { font-size: 13px; }
+  .restaurant-grid { gap: 17px; }
+  .card-image-wrap { height: 215px; }
+  .card-body { padding: 17px; }
+  .card-title-line h3 { font-size: 17px; }
+  .card-cuisine { font-size: 12px; }
+  .card-area { font-size: 11px; }
+  .how-section { padding: 76px 3px; }
+  .how-copy h2 { font-size: 35px; }
+  .step { gap: 12px; padding: 19px 0; }
+  .step h3 { font-size: 14px; }
+  .step p { font-size: 11px; }
+  .partner-banner { padding: 34px 25px; margin-bottom: 65px; }
+  .partner-banner h2 { font-size: 34px; }
+  .partner-banner p { font-size: 12px; }
+  .footer { font-size: 10px; }
+  .partner-page { padding: 54px 19px 70px; }
+  .partner-hero h1 { font-size: clamp(44px, 11vw, 52px); letter-spacing: -.055em; }
+  .partner-hero p { font-size: 13px; line-height: 1.75; }
+  .partner-benefits { font-size: 12px; }
+  .partner-form { padding: 23px 20px; gap: 17px; }
+  .partner-form > label { font-size: 9px; }
+  .partner-form input, .partner-form select { padding: 13px; font-size: 13px; }
+  .form-submit { font-size: 12px; }
+  .partner-side-note p { font-size: 11px; }
+  .modal-content { padding: 20px; }
+  .modal-content h2 { font-size: 25px; }
+  .booking-option strong { font-size: 12px; }
+  .booking-option span { font-size: 10px; }
+  .owner-main { padding-inline: 16px; }
+  .owner-welcome { padding: 31px 0 21px; }
+  .owner-welcome h1 { font-size: 29px; }
+  .owner-welcome p { font-size: 10px; }
+  .owner-stat-card { padding: 15px 12px; }
+  .owner-stat-label { font-size: 8px; }
+  .owner-stat-card>strong { font-size: 21px; }
+  .owner-stat-card>small { font-size: 8px; }
+  .owner-panel { padding: 16px; }
+  .owner-panel-heading h2 { font-size: 13px; }
+  .owner-listing-info strong, .owner-request-info strong { font-size: 10px; }
+  .owner-listing-info small, .owner-request-info small { font-size: 9px; }
+  .admin-page { padding: 26px 15px 45px; }
+  .admin-stats article { padding: 15px; }
+  .admin-stats span { font-size: 9px; }
+  .admin-stats strong { font-size: 24px; }
+  .admin-list-panel { padding: 16px; }
+  .admin-list-heading h2 { font-size: 16px; }
+  .admin-list-heading p { font-size: 10px; }
+  .admin-restaurant-main h3 { font-size: 12px; }
+  .admin-restaurant-main p, .admin-restaurant-main small { font-size: 9px; }
+  .demo-guide-page { padding: 48px 16px 50px; }
+  .demo-guide-hero { margin-bottom: 30px; }
+  .demo-guide-hero h1 { font-size: clamp(40px, 11vw, 50px); }
+  .demo-guide-hero>p { font-size: 14px; line-height: 1.7; }
+  .demo-guide-layout { gap: 15px; }
+  .demo-role-list, .demo-role-detail { padding: 19px; }
+  .demo-role-card { padding: 13px 10px; }
+  .demo-role-card strong { font-size: 13px; }
+  .demo-role-card small { font-size: 10px; }
+  .demo-role-detail h2 { font-size: 27px; }
+  .demo-role-detail>p { font-size: 13px; }
+  .demo-step { font-size: 12px; }
+  .demo-preview-note { font-size: 11px; }
+}
