@@ -58,6 +58,8 @@ export default function App() {
   const [selected, setSelected] = useState<Restaurant | null>(null);
   const [guests, setGuests] = useState(2);
   const [time, setTime] = useState("Tonight");
+  const [dateFilter, setDateFilter] = useState("");
+  const [timeFilter, setTimeFilter] = useState("Any time");
   const [sort, setSort] = useState("Recommended");
   const [saved, setSaved] = useState<number[]>([]);
   const [view, setView] = useState<"guide" | "discover" | "partner" | "owner" | "admin">("discover");
@@ -79,18 +81,22 @@ export default function App() {
     let list = (isSupabaseConfigured && !demoMode ? liveRestaurants : restaurants).filter((r) => {
       const q = search.toLowerCase();
       const matchesSearch = !q || [r.name, r.area, r.cuisine].some((v) => v.toLowerCase().includes(q));
+      const matchesDate = !dateFilter || !r.serviceDate || r.serviceDate === dateFilter;
+      const requestedTime = timeFilter === "Any time" ? null : timeFilter;
+      const matchesTime = !requestedTime || !r.startTime || !r.endTime || (String(r.startTime).slice(0,5) <= requestedTime && String(r.endTime).slice(0,5) > requestedTime);
+      const matchesGuests = !r.seats || Number(r.seats) >= guests;
       const matchesCategory = activeCategory === "All tables" ||
         (activeCategory === "Saved" && saved.includes(r.id)) ||
         (activeCategory === "Near me" && r.area.includes("Bharatpur")) ||
         (activeCategory !== "Saved" && (r.cuisine.toLowerCase().includes(activeCategory.toLowerCase()) ||
         r.tag.toLowerCase().includes(activeCategory.toLowerCase())));
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesCategory && matchesDate && matchesTime && matchesGuests;
     });
     if (sort === "Lowest price") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "Biggest deal") list = [...list].sort((a, b) => b.discount - a.discount);
     if (sort === "Top rated") list = [...list].sort((a, b) => Number(b.rating) - Number(a.rating));
     return list;
-  }, [activeCategory, search, sort, liveRestaurants, saved]);
+  }, [activeCategory, search, sort, liveRestaurants, saved, dateFilter, timeFilter, guests]);
 
   const notify = (message: string) => {
     setToast(message);
@@ -212,7 +218,7 @@ export default function App() {
 
             <div className="filter-row">
               <div className="category-list">{categories.map((category) => <button key={category} className={activeCategory === category ? "category-chip selected" : "category-chip"} onClick={() => setActiveCategory(category)}>{category === "All tables" && <Sparkles size={14} />}{category === "Near me" && <MapPin size={13} />}{category === "Saved" && <Heart size={13} />}{category}{category === "All tables" && <span className="chip-count">06</span>}{category === "Saved" && <span className="chip-count">{saved.length}</span>}</button>)}</div>
-              <label className="sort-control"><SlidersHorizontal size={15} /><select value={sort} onChange={(e) => setSort(e.target.value)}><option>Recommended</option><option>Lowest price</option><option>Biggest deal</option><option>Top rated</option></select><ChevronDown size={13} /></label>
+              <div className="availability-filters"><label className="availability-filter"><CalendarDays size={14}/><span>DATE</span><input type="date" value={dateFilter} min={new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Kathmandu"})} onChange={e=>setDateFilter(e.target.value)} aria-label="Filter by date"/></label><label className="availability-filter"><Clock size={14}/><span>TIME</span><select value={timeFilter} onChange={e=>setTimeFilter(e.target.value)} aria-label="Filter by dining time"><option>Any time</option><option>11:00</option><option>12:00</option><option>13:00</option><option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option></select></label></div><label className="sort-control"><SlidersHorizontal size={15} /><select value={sort} onChange={(e) => setSort(e.target.value)}><option>Recommended</option><option>Lowest price</option><option>Biggest deal</option><option>Top rated</option></select><ChevronDown size={13} /></label>
             </div>
 
             <div className="results-meta"><span><strong>{filtered.length.toString().padStart(2, "0")}</strong> {isSupabaseConfigured && !demoMode ? "available offers" : "places with sample tables"}</span><span className="results-side-note"><Flame size={14} /> Handpicked for a good night out</span></div>

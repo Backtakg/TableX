@@ -814,3 +814,13 @@ button:focus-visible, a:focus-visible {
 .booking-map-link{display:flex;align-items:center;gap:9px;margin:13px 0 16px;padding:13px 14px;border:1px solid #dce8d7;border-radius:11px;background:#f5f9f2;color:#315b39;text-decoration:none;font-size:12px;font-weight:750;transition:background .2s,border-color .2s,transform .2s}
 .booking-map-link:hover{background:#edf5e8;border-color:#a9c99a;transform:translateY(-1px)}
 .booking-map-link svg:last-child{margin-left:auto}
+
+
+/* Customer availability filters */
+.availability-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.availability-filter{display:flex;align-items:center;gap:6px;min-height:35px;padding:0 10px;border:1px solid #e7ece4;border-radius:9px;background:#fff;color:#71806f}
+.availability-filter>span{font-size:8px;font-weight:850;letter-spacing:1px;color:#8b9689}
+.availability-filter input,.availability-filter select{max-width:132px;min-width:0;border:0;outline:0;background:transparent;color:#334638;font:650 11px "DM Sans",sans-serif}
+.availability-filter input{width:112px}
+.availability-filter select{cursor:pointer}
+@media(max-width:600px){.availability-filters{width:100%;order:2}.availability-filter{flex:1;min-width:0}.availability-filter input{width:100%;max-width:125px}.availability-filter select{width:100%;max-width:95px}.sort-control{order:3}}
