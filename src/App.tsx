@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase, isSupabaseConfigured } from "./lib/supabase";
 import PartnerDashboard from "./PartnerDashboard";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -10,7 +11,7 @@ import {
 type Restaurant = {
   id: number; name: string; area: string; cuisine: string; rating: string;
   reviews: string; price: number; originalPrice: number; discount: number;
-  available: number; nextSlot: string; image: string; tag: string; featured?: boolean;
+  available: number; nextSlot: string; image: string; tag: string; featured?: boolean; offerId?: string; seats?: number; serviceDate?: string; startTime?: string; endTime?: string;
 };
 
 const restaurants: Restaurant[] = [
@@ -43,6 +44,13 @@ export default function App() {
   const [restaurantName, setRestaurantName] = useState("");
   const [tableCount, setTableCount] = useState("3");
   const [offer, setOffer] = useState("15");
+  const [liveRestaurants, setLiveRestaurants] = useState<Restaurant[]>([]);
+  const [liveLoaded, setLiveLoaded] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPassword, setCustomerPassword] = useState("");
+  const [guestName, setGuestName] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
+  const [customerAuthMode, setCustomerAuthMode] = useState<"login" | "signup">("login");
 
   const filtered = useMemo(() => {
     let list = restaurants.filter((r) => {
@@ -58,7 +66,7 @@ export default function App() {
     if (sort === "Biggest deal") list = [...list].sort((a, b) => b.discount - a.discount);
     if (sort === "Top rated") list = [...list].sort((a, b) => Number(b.rating) - Number(a.rating));
     return list;
-  }, [activeCategory, search, sort]);
+  }, [activeCategory, search, sort, liveRestaurants]);
 
   const notify = (message: string) => {
     setToast(message);
@@ -135,7 +143,7 @@ export default function App() {
 
             <section className="intro-row" id="available-tables">
               <div><div className="section-kicker">A SEAT WITH YOUR NAME ON IT</div><h2>Tables worth <em>going out for.</em></h2><p>Explore available tables and reserve before someone else does.</p></div>
-              <div className="availability-note"><span className="live-dot" /><span><strong>Live-style demo</strong><small>Sample availability · {time.toLowerCase()}</small></span></div>
+              <div className="availability-note"><span className="live-dot" /><span><strong>{isSupabaseConfigured ? "Live TABLEX offers" : "Prototype preview"}</strong><small>{isSupabaseConfigured ? (liveLoaded ? "Connected to TABLEX database" : "Loading available offers…") : "Sample availability · " + time.toLowerCase()}</small></span></div>
             </section>
 
             <div className="filter-row">
@@ -143,7 +151,7 @@ export default function App() {
               <label className="sort-control"><SlidersHorizontal size={15} /><select value={sort} onChange={(e) => setSort(e.target.value)}><option>Recommended</option><option>Lowest price</option><option>Biggest deal</option><option>Top rated</option></select><ChevronDown size={13} /></label>
             </div>
 
-            <div className="results-meta"><span><strong>{filtered.length.toString().padStart(2, "0")}</strong> places with tables to book</span><span className="results-side-note"><Flame size={14} /> Handpicked for a good night out</span></div>
+            <div className="results-meta"><span><strong>{filtered.length.toString().padStart(2, "0")}</strong> {isSupabaseConfigured ? "available offers" : "places with sample tables"}</span><span className="results-side-note"><Flame size={14} /> Handpicked for a good night out</span></div>
 
             {filtered.length ? <div className="restaurant-grid">
               {filtered.map((restaurant, index) => <motion.article className="restaurant-card" key={restaurant.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: index * 0.055 }} whileHover={{ y: -5 }} onClick={() => openRestaurant(restaurant)}>
@@ -153,7 +161,7 @@ export default function App() {
                   <button className="card-book" onClick={(e) => { e.stopPropagation(); openRestaurant(restaurant); }}>View availability <ArrowUpRight size={15} /></button>
                 </div>
               </motion.article>)}
-            </div> : <div className="empty-state"><Search size={28} /><h3>No tables found just yet</h3><p>Try another cuisine, area or search term.</p><button onClick={() => { setSearch(""); setActiveCategory("All tables"); }}>Clear filters</button></div>}
+            </div> : <div className="empty-state"><Search size={28} /><h3>No tables found just yet</h3><p>{isSupabaseConfigured && !liveLoaded ? "Loading live offers…" : isSupabaseConfigured ? "No approved restaurants have published available tables yet." : "Try another cuisine, area or search term."}</p><button onClick={() => { setSearch(""); setActiveCategory("All tables"); }}>Clear filters</button></div>}
 
             <section className="how-section" id="how-it-works"><div className="how-copy"><div className="section-kicker">A BETTER WAY TO BOOK</div><h2>Three steps.<br /><em>One great night.</em></h2><p>No calling around. No guesswork. Just find a table that works for you.</p></div><div className="steps"><div className="step"><span className="step-number">01</span><span className="step-icon"><Search size={20} /></span><div><h3>Find your spot</h3><p>Explore restaurants with tables available for your time and group.</p></div></div><div className="step"><span className="step-number">02</span><span className="step-icon"><CalendarDays size={20} /></span><div><h3>Choose & request</h3><p>Pick a slot, see the price and send your reservation request.</p></div></div><div className="step"><span className="step-number">03</span><span className="step-icon"><Utensils size={20} /></span><div><h3>Show up & enjoy</h3><p>Get confirmation and let the restaurant take care of the rest.</p></div></div></div></section>
 
@@ -171,7 +179,7 @@ export default function App() {
 
       <footer className="footer"><a className="brand footer-brand" href="#"><span className="brand-mark"><Utensils size={17} /></span><span>TABLE<span className="brand-x">X</span><small>FIND YOUR TABLE</small></span></a><span>Good tables make good stories.</span><span>© 2026 TABLEX · Nepal</span></footer>
 
-      <AnimatePresence>{selected && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelected(null)}><motion.div className="booking-modal" initial={{ opacity: 0, y: 24, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20 }} transition={{ type: "spring", damping: 25, stiffness: 280 }} onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)}><X size={19} /></button><img className="modal-image" src={selected.image} alt={selected.name} /><div className="modal-content">{bookingDone ? <div className="booking-success"><span className="success-icon"><Check size={27} /></span><div className="section-kicker">REQUEST PREVIEWED</div><h2>You're one step<br /><em>closer to dinner.</em></h2><p>This is a prototype booking. No reservation has been sent to the restaurant yet.</p><button className="form-submit" onClick={() => setSelected(null)}>Back to exploring <ArrowRight size={16} /></button></div> : <><div className="modal-topline"><span className="discount-badge">{selected.discount}% OFF</span><span className="rating"><Star size={13} fill="currentColor" /> {selected.rating} ({selected.reviews})</span></div><h2>{selected.name}</h2><p className="modal-meta">{selected.cuisine} <span>·</span> <MapPin size={13} /> {selected.area}</p><div className="modal-price"><strong>{money(selected.price)}</strong><del>{money(selected.originalPrice)}</del><span>estimated table spend</span></div><div className="modal-divider" /><div className="booking-option"><div><strong><CalendarDays size={16} /> Date & time</strong><span>{time} · {selected.nextSlot}</span></div><span className="option-pill">Available</span></div><div className="booking-option"><div><strong><Users size={16} /> Guests</strong><span>How many people?</span></div><div className="guest-stepper"><button onClick={() => setGuests(Math.max(1, guests - 1))}><Minus size={13} /></button><strong>{guests}</strong><button onClick={() => setGuests(Math.min(12, guests + 1))}><Plus size={13} /></button></div></div><div className="availability-callout"><span className="available-dot" /><span><strong>{selected.available} tables available</strong><small>Availability shown is sample data for this prototype.</small></span></div><button className="form-submit reserve-button" onClick={() => setBookingDone(true)}>Request this table <ArrowRight size={16} /></button><p className="modal-footnote">No payment required in this demo. Booking confirmation will be added in the next build phase.</p></>}</div></motion.div></motion.div>}</AnimatePresence>
+      <AnimatePresence>{selected && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelected(null)}><motion.div className="booking-modal" initial={{ opacity: 0, y: 24, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20 }} transition={{ type: "spring", damping: 25, stiffness: 280 }} onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)}><X size={19} /></button><img className="modal-image" src={selected.image} alt={selected.name} /><div className="modal-content">{bookingDone ? <div className="booking-success"><span className="success-icon"><Check size={27} /></span><div className="section-kicker">REQUEST PREVIEWED</div><h2>You're one step<br /><em>closer to dinner.</em></h2><p>This is a prototype booking. No reservation has been sent to the restaurant yet.</p><button className="form-submit" onClick={() => setSelected(null)}>Back to exploring <ArrowRight size={16} /></button></div> : <><div className="modal-topline"><span className="discount-badge">{selected.discount}% OFF</span><span className="rating"><Star size={13} fill="currentColor" /> {selected.rating} ({selected.reviews})</span></div><h2>{selected.name}</h2><p className="modal-meta">{selected.cuisine} <span>·</span> <MapPin size={13} /> {selected.area}</p><div className="modal-price"><strong>{money(selected.price)}</strong><del>{money(selected.originalPrice)}</del><span>{selected.offerId ? "booking price for this table offer" : "sample estimated table spend"}</span></div><div className="modal-divider" /><div className="booking-option"><div><strong><CalendarDays size={16} /> Date & time</strong><span>{selected.serviceDate || time} · {selected.nextSlot}</span></div><span className="option-pill">Available</span></div><div className="booking-option"><div><strong><Users size={16} /> Guests</strong><span>How many people?</span></div><div className="guest-stepper"><button onClick={() => setGuests(Math.max(1, guests - 1))}><Minus size={13} /></button><strong>{guests}</strong><button onClick={() => setGuests(Math.min(12, guests + 1))}><Plus size={13} /></button></div></div><div className="availability-callout"><span className="available-dot" /><span><strong>{selected.offerId ? "This table offer is available" : selected.available + " sample tables available"}</strong><small>{selected.offerId ? "A request will be sent to the restaurant." : "Sample data only."}</small></span></div>{selected.offerId && <><label className="booking-auth-field">YOUR NAME<input value={guestName} onChange={e=>setGuestName(e.target.value)} placeholder="Full name"/></label><label className="booking-auth-field">PHONE NUMBER<input value={guestPhone} onChange={e=>setGuestPhone(e.target.value)} placeholder="+977..." /></label><label className="booking-auth-field">EMAIL<input type="email" value={customerEmail} onChange={e=>setCustomerEmail(e.target.value)} placeholder="you@example.com"/></label><label className="booking-auth-field">PASSWORD<input type="password" value={customerPassword} onChange={e=>setCustomerPassword(e.target.value)} placeholder="At least 8 characters"/></label><button type="button" className="owner-text-button" onClick={()=>setCustomerAuthMode(customerAuthMode==="login"?"signup":"login")}>{customerAuthMode==="login"?"New customer? Create account":"Already registered? Sign in"}</button></>}<button className="form-submit reserve-button" onClick={() => void reserveSelected()}>Request this table <ArrowRight size={16} /></button><p className="modal-footnote">{selected.offerId ? "Your request is saved securely. The restaurant must confirm it." : "Prototype booking preview only."}</p></>}</div></motion.div></motion.div>}</AnimatePresence>
       <AnimatePresence>{toast && <motion.div className="toast" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}><Check size={16} />{toast}</motion.div>}</AnimatePresence>
     </div>
   );
