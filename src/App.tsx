@@ -24,7 +24,7 @@ const restaurants: Restaurant[] = [
   { id: 6, name: "Basil & Bean", area: "Hakim Chowk", cuisine: "Cafe · Bakery", rating: "4.5", reviews: "76", price: 650, originalPrice: 800, discount: 19, available: 6, nextSlot: "6:45 PM", tag: "Coffee & bites", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1000&q=85" },
 ];
 
-const categories = ["All tables", "Near me", "Nepali", "Cafe", "Italian", "Rooftop", "Family"];
+const categories = ["All tables", "Near me", "Nepali", "Cafe", "Italian", "Rooftop", "Family", "Saved"];
 
 // Demo mode is enabled by default so a prototype never creates real reservations.
 const demoMode = import.meta.env.VITE_DEMO_MODE !== "false";
@@ -80,16 +80,17 @@ export default function App() {
       const q = search.toLowerCase();
       const matchesSearch = !q || [r.name, r.area, r.cuisine].some((v) => v.toLowerCase().includes(q));
       const matchesCategory = activeCategory === "All tables" ||
+        (activeCategory === "Saved" && saved.includes(r.id)) ||
         (activeCategory === "Near me" && r.area.includes("Bharatpur")) ||
-        r.cuisine.toLowerCase().includes(activeCategory.toLowerCase()) ||
-        r.tag.toLowerCase().includes(activeCategory.toLowerCase());
+        (activeCategory !== "Saved" && (r.cuisine.toLowerCase().includes(activeCategory.toLowerCase()) ||
+        r.tag.toLowerCase().includes(activeCategory.toLowerCase())));
       return matchesSearch && matchesCategory;
     });
     if (sort === "Lowest price") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "Biggest deal") list = [...list].sort((a, b) => b.discount - a.discount);
     if (sort === "Top rated") list = [...list].sort((a, b) => Number(b.rating) - Number(a.rating));
     return list;
-  }, [activeCategory, search, sort, liveRestaurants]);
+  }, [activeCategory, search, sort, liveRestaurants, saved]);
 
   const notify = (message: string) => {
     setToast(message);
@@ -189,7 +190,7 @@ export default function App() {
             <section className="search-panel" aria-label="Find a restaurant table">
               <div className="search-field destination-field">
                 <span className="field-icon"><MapPin size={18} /></span>
-                <label><small>LOCATION</small><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine or area" /></label>
+                <label><small>LOCATION</small><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search restaurants, cuisine or area" /></label>
               </div>
               <div className="search-divider" />
               <div className="search-field">
@@ -210,7 +211,7 @@ export default function App() {
             </section>
 
             <div className="filter-row">
-              <div className="category-list">{categories.map((category) => <button key={category} className={activeCategory === category ? "category-chip selected" : "category-chip"} onClick={() => setActiveCategory(category)}>{category === "All tables" && <Sparkles size={14} />}{category === "Near me" && <MapPin size={13} />}{category}{category === "All tables" && <span className="chip-count">06</span>}</button>)}</div>
+              <div className="category-list">{categories.map((category) => <button key={category} className={activeCategory === category ? "category-chip selected" : "category-chip"} onClick={() => setActiveCategory(category)}>{category === "All tables" && <Sparkles size={14} />}{category === "Near me" && <MapPin size={13} />}{category === "Saved" && <Heart size={13} />}{category}{category === "All tables" && <span className="chip-count">06</span>}{category === "Saved" && <span className="chip-count">{saved.length}</span>}</button>)}</div>
               <label className="sort-control"><SlidersHorizontal size={15} /><select value={sort} onChange={(e) => setSort(e.target.value)}><option>Recommended</option><option>Lowest price</option><option>Biggest deal</option><option>Top rated</option></select><ChevronDown size={13} /></label>
             </div>
 
@@ -224,7 +225,7 @@ export default function App() {
                   <button className="card-book" onClick={(e) => { e.stopPropagation(); openRestaurant(restaurant); }}>View availability <ArrowUpRight size={15} /></button>
                 </div>
               </motion.article>)}
-            </div> : <div className="empty-state"><Search size={28} /><h3>No tables found just yet</h3><p>{isSupabaseConfigured && !demoMode && !liveLoaded ? "Loading live offers…" : isSupabaseConfigured && !demoMode ? "No approved restaurants have published available tables yet." : "Try another cuisine, area or search term."}</p><button onClick={() => { setSearch(""); setActiveCategory("All tables"); }}>Clear filters</button></div>}
+            </div> : <div className="empty-state"><Search size={28} /><h3>No tables found just yet</h3><p>{isSupabaseConfigured && !demoMode && !liveLoaded ? "Loading live offers…" : isSupabaseConfigured && !demoMode ? "No approved restaurants have published available tables yet." : "{activeCategory === "Saved" ? "Tap the heart on any restaurant card to save it here." : "Try another cuisine, area or search term."}"}</p><button onClick={() => { setSearch(""); setActiveCategory("All tables"); }}>Clear filters</button></div>}
 
             <section className="how-section" id="how-it-works"><div className="how-copy"><div className="section-kicker">A BETTER WAY TO BOOK</div><h2>Three steps.<br /><em>One great night.</em></h2><p>No calling around. No guesswork. Just find a table that works for you.</p></div><div className="steps"><div className="step"><span className="step-number">01</span><span className="step-icon"><Search size={20} /></span><div><h3>Find your spot</h3><p>Explore restaurants with tables available for your time and group.</p></div></div><div className="step"><span className="step-number">02</span><span className="step-icon"><CalendarDays size={20} /></span><div><h3>Choose & request</h3><p>Pick a slot, see the price and send your reservation request.</p></div></div><div className="step"><span className="step-number">03</span><span className="step-icon"><Utensils size={20} /></span><div><h3>Show up & enjoy</h3><p>Get confirmation and let the restaurant take care of the rest.</p></div></div></div></section>
 
