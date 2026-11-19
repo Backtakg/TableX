@@ -29,5 +29,20 @@ Use a **dedicated Supabase project for TABLEX**. The connected Supabase account 
 ## Important MVP limitation
 
 The initial schema prevents two customers from claiming the same offer by making `reservations.offer_id` unique.
-The reservation creation flow should be implemented as a database RPC in the next backend step so offer availability,
-price, seat count, and reservation insertion are checked atomically. Payments are not included yet.
+Reservation creation is implemented by `public.create_reservation(...)` in `20261119170000_atomic_reservation_rpc.sql`. It locks the offer row, validates availability and party size, and inserts the reservation in one database transaction. Payments are not included yet.
+
+
+## Frontend integration
+
+The React app now uses `@supabase/supabase-js` through `src/lib/supabase.ts`.
+
+Set these environment variables locally (copy `.env.example` to `.env.local`) and in the hosting provider's build environment:
+
+- `VITE_SUPABASE_URL`: the TABLEX project URL.
+- `VITE_SUPABASE_ANON_KEY`: the Supabase publishable key (or legacy anon key).
+
+These values are intended for browser use. Never expose a service-role or secret key in a `VITE_*` variable.
+
+The partner portal supports email sign-up/sign-in, restaurant registration (pending approval), publishing and pausing offers, and reviewing/confirming/declining reservations. Customer discovery reads approved restaurants' live offers, and booking requests use the atomic RPC above.
+
+For the first pilot, restaurant approval is a manual admin action in Supabase. Configure the site's production and preview environment variables before expecting the hosted frontend to connect.
