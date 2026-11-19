@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase, isSupabaseConfigured } from "./lib/supabase";
 import PartnerDashboard from "./PartnerDashboard";
+import AdminDashboard from "./AdminDashboard";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, CalendarDays, Check, ChevronDown,
@@ -37,7 +38,7 @@ export default function App() {
   const [time, setTime] = useState("Tonight");
   const [sort, setSort] = useState("Recommended");
   const [saved, setSaved] = useState<number[]>([]);
-  const [view, setView] = useState<"discover" | "partner" | "owner">("discover");
+  const [view, setView] = useState<"discover" | "partner" | "owner" | "admin">("discover");
   const [toast, setToast] = useState("");
   const [bookingDone, setBookingDone] = useState(false);
   const [ownerName, setOwnerName] = useState("");
@@ -131,7 +132,7 @@ export default function App() {
         <nav className="desktop-nav">
           <button className={view === "discover" ? "nav-link active" : "nav-link"} onClick={() => setView("discover")}>Discover</button>
           <button className="nav-link" onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}>How it works</button>
-          <button className={view === "partner" ? "nav-link active" : "nav-link"} onClick={() => setView("partner")}>For restaurants</button><button className={view === "owner" ? "nav-link active" : "nav-link"} onClick={() => setView("owner")}>Owner dashboard</button>
+          <button className={view === "partner" ? "nav-link active" : "nav-link"} onClick={() => setView("partner")}>For restaurants</button><button className={view === "owner" ? "nav-link active" : "nav-link"} onClick={() => setView("owner")}>Owner dashboard</button><button className={view === "admin" ? "nav-link active" : "nav-link"} onClick={() => setView("admin")}>Admin</button>
         </nav>
         <div className="nav-actions">
           <button className="location-pill" onClick={() => notify("Showing sample listings around Bharatpur, Nepal.")}><MapPin size={15} /> Bharatpur <ChevronDown size={14} /></button>
@@ -212,8 +213,10 @@ export default function App() {
           <div className="partner-hero"><div className="section-kicker light-kicker">GROW WITH TABLEX</div><h1>Your empty tables<br /><em>deserve a full house.</em></h1><p>Reach nearby diners, publish available tables and turn quiet slots into real covers. You control the inventory. You control the price.</p><div className="partner-benefits"><span><Check size={15} /> Free to get started</span><span><Check size={15} /> You control availability</span><span><Check size={15} /> Pay per confirmed visit</span></div></div>
           <div className="partner-form-wrap"><form className="partner-form" onSubmit={(e) => { e.preventDefault(); notify("Thanks! Your partner interest has been recorded in this demo."); setOwnerName(""); setRestaurantName(""); }}><div className="form-heading"><span className="form-icon"><Utensils size={20} /></span><div><h2>Become a partner</h2><p>Tell us a little about your restaurant.</p></div></div><label>YOUR NAME<input required value={ownerName} onChange={(e) => setOwnerName(e.target.value)} placeholder="Restaurant owner or manager" /></label><label>RESTAURANT NAME<input required value={restaurantName} onChange={(e) => setRestaurantName(e.target.value)} placeholder="e.g. The Greenhouse" /></label><label>HOW MANY TABLES DO YOU WANT TO LIST?<select value={tableCount} onChange={(e) => setTableCount(e.target.value)}><option value="1">1 table</option><option value="2">2 tables</option><option value="3">3–5 tables</option><option value="6">6–10 tables</option><option value="10">10+ tables</option></select></label><label>YOUR INTRODUCTORY OFFER<select value={offer} onChange={(e) => setOffer(e.target.value)}><option value="0">No discount — regular price</option><option value="10">10% off</option><option value="15">15% off</option><option value="20">20% off</option><option value="25">25% off</option></select></label><button className="form-submit" type="submit">Request a partner call <ArrowRight size={16} /></button><small className="form-disclaimer">Demo form only. Partner requests are not yet sent to a server.</small></form><div className="partner-side-note"><div className="side-note-icon"><Sparkles size={18} /></div><h3>You know your tables best.</h3><p>List only the tables you want to make available. Set the time window, party size and price. TABLEX helps diners discover them.</p><div className="mini-feature"><Check size={15} /> No POS integration required for the pilot</div><div className="mini-feature"><Check size={15} /> Pause or edit listings any time</div><div className="mini-feature"><Check size={15} /> Start with just one available table</div></div></div>
         </main>
-      ) : (
+      ) : view === "owner" ? (
         <PartnerDashboard />
+      ) : (
+        <AdminDashboard />
       )}
 
       <footer className="footer"><a className="brand footer-brand" href="#"><span className="brand-mark"><Utensils size={17} /></span><span>TABLE<span className="brand-x">X</span><small>FIND YOUR TABLE</small></span></a><span>Good tables make good stories.</span><span>© 2026 TABLEX · Nepal</span></footer>
