@@ -33,6 +33,25 @@ function money(value: number) {
   return "Rs. " + value.toLocaleString("en-IN");
 }
 
+
+function DemoGuide({ onOpen }: { onOpen: (view: "discover" | "partner") => void }) {
+ const [role,setRole]=useState<"customer"|"partner"|"owner"|"admin">("customer");
+ const items=[
+  {id:"customer",name:"Customer",sub:"Discover restaurants and request a table",icon:<Search size={19}/>},
+  {id:"partner",name:"Restaurant partner",sub:"Join TABLEX and publish tables",icon:<Utensils size={19}/>},
+  {id:"owner",name:"Restaurant owner",sub:"Manage offers and reservation requests",icon:<CalendarDays size={19}/>},
+  {id:"admin",name:"TABLEX admin",sub:"Review partners and oversee the marketplace",icon:<Sparkles size={19}/>},
+ ] as const;
+ const info={
+  customer:{heading:"Find a table in a few clicks.",copy:"Browse sample Bharatpur restaurants, compare offers, choose a party size and complete a simulated reservation.",stats:["6 sample restaurants","Up to 24% sample offers","No real booking created"],steps:["Explore restaurant cards","Choose a restaurant and guest count","Complete the demo reservation"]},
+  partner:{heading:"Bring your restaurant onto TABLEX.",copy:"Show how a restaurant can introduce itself, choose how many tables to list and propose an introductory offer.",stats:["Free partner interest form","Flexible sample inventory","No application submitted"],steps:["Enter restaurant and contact name","Choose table quantity","Submit the sample interest form"]},
+  owner:{heading:"A simple workspace for restaurant teams.",copy:"Preview how owners publish table offers, control availability and respond to reservation requests. Figures are illustrative.",stats:["12 sample tables listed","8 sample requests today","3 sample offers live"],steps:["Create a time-limited offer","Pause or update availability","Confirm or decline a request"]},
+  admin:{heading:"Keep the marketplace organised.",copy:"Preview how TABLEX administrators review applications, approve trusted partners and monitor activity.",stats:["6 sample applications","4 approved partners","2 awaiting review"],steps:["Review a partner application","Approve or reject access","Monitor marketplace activity"]}
+ };
+ const current=info[role];
+ return <main className="demo-guide-page"><section className="demo-guide-hero"><div className="section-kicker">TABLEX · INTERACTIVE PRODUCT TOUR</div><h1>One marketplace.<br/><em>Four perspectives.</em></h1><p>Explore how customers, restaurant teams and TABLEX administrators use the same marketplace. Everything in this guided tour is sample data.</p><span className="demo-guide-tag">● SAFE PROTOTYPE WALKTHROUGH · NO REAL BOOKINGS</span></section><section className="demo-guide-layout"><div className="demo-role-list"><div className="section-kicker">CHOOSE A PERSPECTIVE</div>{items.map(item=><button key={item.id} className={role===item.id?"demo-role-card active":"demo-role-card"} onClick={()=>setRole(item.id)}><span className="demo-role-icon">{item.icon}</span><span><strong>{item.name}</strong><small>{item.sub}</small></span><ArrowRight size={16}/></button>)}</div><article className="demo-role-detail"><div className="section-kicker">{role.toUpperCase()} EXPERIENCE</div><h2>{current.heading}</h2><p>{current.copy}</p><div className="demo-stat-grid">{current.stats.map(s=><div className="demo-stat" key={s}><strong>{s}</strong></div>)}</div><div className="demo-steps"><strong>What to demonstrate</strong>{current.steps.map((s,i)=><div className="demo-step" key={s}><span>{String(i+1).padStart(2,"0")}</span>{s}</div>)}</div>{role==="customer"||role==="partner"?<button className="form-submit demo-open-button" onClick={()=>onOpen(role)}>Open {role==="customer"?"customer marketplace":"partner form"} <ArrowRight size={16}/></button>:<div className="demo-preview-note">✓ Simulated dashboard preview. The actual owner and admin workspaces remain protected behind sign-in.</div>}</article></section><div className="demo-guide-footer"><span>Designed for product demonstrations and early feedback.</span><span>Sample figures are not live business data.</span></div></main>;
+}
+
 export default function App() {
   const [activeCategory, setActiveCategory] = useState("All tables");
   const [search, setSearch] = useState("");
@@ -41,7 +60,7 @@ export default function App() {
   const [time, setTime] = useState("Tonight");
   const [sort, setSort] = useState("Recommended");
   const [saved, setSaved] = useState<number[]>([]);
-  const [view, setView] = useState<"discover" | "partner" | "owner" | "admin">("discover");
+  const [view, setView] = useState<"guide" | "discover" | "partner" | "owner" | "admin">("discover");
   const [toast, setToast] = useState("");
   const [bookingDone, setBookingDone] = useState(false);
   const [ownerName, setOwnerName] = useState("");
@@ -134,7 +153,7 @@ export default function App() {
           <span>TABLE<span className="brand-x">X</span><small>FIND YOUR TABLE</small></span>
         </a>
         <nav className="desktop-nav">
-          <button className={view === "discover" ? "nav-link active" : "nav-link"} onClick={() => setView("discover")}>Discover</button>
+          <button className={view === "guide" ? "nav-link active" : "nav-link"} onClick={() => setView("guide")}>Guided demo</button><button className={view === "discover" ? "nav-link active" : "nav-link"} onClick={() => setView("discover")}>Discover</button>
           <button className="nav-link" onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}>How it works</button>
           <button className={view === "partner" ? "nav-link active" : "nav-link"} onClick={() => setView("partner")}>For restaurants</button><button className={view === "owner" ? "nav-link active" : "nav-link"} onClick={() => setView("owner")}>Owner dashboard</button><button className={view === "admin" ? "nav-link active" : "nav-link"} onClick={() => setView("admin")}>Admin</button>
         </nav>
@@ -144,7 +163,7 @@ export default function App() {
         </div>
       </header>
 
-      {view === "discover" ? (
+      {view === "guide" ? <DemoGuide onOpen={(next) => setView(next)} /> : view === "discover" ? (
         <>
           <section className="hero">
             <div className="hero-glow glow-one" /><div className="hero-glow glow-two" />
