@@ -53,7 +53,7 @@ export default function App() {
   const [customerAuthMode, setCustomerAuthMode] = useState<"login" | "signup">("login");
 
   const filtered = useMemo(() => {
-    let list = restaurants.filter((r) => {
+    let list = (isSupabaseConfigured ? liveRestaurants : restaurants).filter((r) => {
       const q = search.toLowerCase();
       const matchesSearch = !q || [r.name, r.area, r.cuisine].some((v) => v.toLowerCase().includes(q));
       const matchesCategory = activeCategory === "All tables" ||
@@ -73,6 +73,25 @@ export default function App() {
     window.setTimeout(() => setToast(""), 3200);
   };
 
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    let active = true;
+    supabase.from("table_offers").select("id,title,seats,service_date,starts_at,ends_at,offer_price,original_price,restaurants!inner(id,name,area,cuisine,city,cover_image_url,status)")
+      .eq("status", "live").eq("restaurants.status", "approved")
+      .gte("service_date", new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kathmandu" }))
+      .order("service_date", { ascending: true })
+      .then(({ data, error }) => {
+        if (!active) return;
+        if (error) notify("Could not load live tables: " + error.message);
+        else setLiveRestaurants((data ?? []).map((row: any, index: number) => {
+          const r = Array.isArray(row.restaurants) ? row.restaurants[0] : row.restaurants;
+          return { id: index + 1000, offerId: row.id, name: r.name, area: r.area, cuisine: r.cuisine || "Restaurant", rating: "New", reviews: "0", price: Number(row.offer_price), originalPrice: Number(row.original_price), discount: row.original_price > 0 ? Math.round((1 - row.offer_price / row.original_price) * 100) : 0, available: 1, nextSlot: String(row.starts_at).slice(0,5), image: r.cover_image_url || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1000&q=85", tag: row.title, seats: row.seats, serviceDate: row.service_date, startTime: row.starts_at, endTime: row.ends_at };
+        }));
+        setLiveLoaded(true);
+      });
+    return () => { active = false; };
+  }, []);
+
   const openRestaurant = (restaurant: Restaurant) => {
     setSelected(restaurant);
     setBookingDone(false);
@@ -80,6 +99,26 @@ export default function App() {
 
   const toggleSaved = (id: number) => {
     setSaved((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]);
+  };
+
+  const reserveSelected = async () => {
+    if (!selected?.offerId) { setBookingDone(true); return; }
+    let { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      const auth = customerAuthMode === "signup"
+        ? await supabase.auth.signUp({ email: customerEmail.trim(), password: customerPassword })
+        : await supabase.auth.signInWithPassword({ email: customerEmail.trim(), password: customerPassword });
+      if (auth.error) { notify(auth.error.message); return; }
+      session = auth.data.session;
+      if (!session) { notify("Check your email to confirm your account, then sign in to reserve."); return; }
+    }
+    if (guestName.trim().length < 2 || guestPhone.trim().length < 7) { notify("Enter your name and a valid phone number."); return; }
+    const { error } = await supabase.rpc("create_reservation", {
+      p_offer_id: selected.offerId, p_guest_name: guestName.trim(),
+      p_guest_phone: guestPhone.trim(), p_party_size: guests,
+    });
+    if (error) notify(error.message);
+    else { setBookingDone(true); notify("Reservation request sent to the restaurant."); }
   };
 
   return (
