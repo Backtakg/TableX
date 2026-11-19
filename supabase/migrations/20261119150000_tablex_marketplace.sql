@@ -173,7 +173,8 @@ using (
   )
 )
 with check (
-  exists (
+  status in ('confirmed', 'declined', 'completed')
+  and exists (
     select 1 from public.restaurants r
     where r.id = restaurant_id and r.owner_id = (select auth.uid())
   )
@@ -181,7 +182,10 @@ with check (
 
 -- Explicit grants are required on projects where Data API exposure is not automatic.
 grant select on public.restaurants, public.table_offers to anon, authenticated;
-grant insert, update on public.restaurants to authenticated;
+grant insert on public.restaurants to authenticated;
+grant update (name, slug, description, cuisine, address, area, city, phone, cover_image_url)
+  on public.restaurants to authenticated;
 grant insert, update on public.table_offers to authenticated;
-grant select, insert, update on public.reservations to authenticated;
+grant select, insert on public.reservations to authenticated;
+grant update (status) on public.reservations to authenticated;
 
