@@ -808,3 +808,9 @@ button:focus-visible, a:focus-visible {
 .owner-auth-mobile-brand{display:none}
 @media(max-width:850px){.owner-auth-page{grid-template-columns:1fr}.owner-auth-story{min-height:0;padding:30px 25px 34px}.owner-auth-copy{margin:55px 0 10px}.owner-auth-copy h1{font-size:clamp(40px,9vw,58px)}.owner-auth-benefits{margin-top:25px}.owner-auth-foot{margin-top:40px}.owner-auth-panel{padding:34px 20px 45px}.owner-auth-card{max-width:500px}}
 @media(max-width:480px){.owner-auth-story{padding:25px 20px 28px}.owner-auth-brand{font-size:20px}.owner-auth-copy{margin:42px 0 5px}.owner-auth-copy h1{font-size:42px}.owner-auth-copy>p{font-size:13px}.owner-auth-benefits{grid-template-columns:1fr;gap:9px}.owner-auth-benefits>div{padding:12px}.owner-auth-foot{font-size:8px}.owner-auth-panel{padding:25px 15px 32px}.owner-auth-card{padding:25px 21px;border-radius:17px}.owner-auth-card h2{font-size:25px}.owner-auth-mobile-brand{display:block;margin-top:23px;color:#6c7b6d;font:800 11px Manrope,sans-serif;letter-spacing:1.4px}}
+
+
+/* Exact restaurant location link in the availability panel */
+.booking-map-link{display:flex;align-items:center;gap:9px;margin:13px 0 16px;padding:13px 14px;border:1px solid #dce8d7;border-radius:11px;background:#f5f9f2;color:#315b39;text-decoration:none;font-size:12px;font-weight:750;transition:background .2s,border-color .2s,transform .2s}
+.booking-map-link:hover{background:#edf5e8;border-color:#a9c99a;transform:translateY(-1px)}
+.booking-map-link svg:last-child{margin-left:auto}
