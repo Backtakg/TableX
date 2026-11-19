@@ -45,22 +45,23 @@ npm run build
 npm run preview
 ```
 
-## Important prototype notes
+## Prototype demo mode
 
-- Restaurant listings, prices, ratings, images and availability are illustrative demo data, not live inventory.
-- Reservation actions currently show a local prototype confirmation only. They do not contact a restaurant or create a real booking.
-- The partner form is frontend-only and does not yet submit data to a backend.
+Demo mode is enabled by default (`VITE_DEMO_MODE=true`). It is designed for presentations and safe walkthroughs:
+- Shows six illustrative Bharatpur restaurant listings even when Supabase credentials are configured.
+- Reservation requests display a local success state only; they never create a database record or contact a restaurant.
+- The interface displays a persistent prototype notice so viewers know the data is illustrative.
+- Partner interest form remains frontend-only. Owner and admin workspaces remain protected Supabase-backed areas for internal testing.
 - No payment collection is implemented.
+
+To test the connected marketplace flow, set `VITE_DEMO_MODE=false` in the environment and provide the Supabase variables. Do not use real customer data during demonstrations.
 
 ## Next engineering milestones
 
-1. Connect a backend and database (restaurants, branches, tables, availability slots, customers, reservations).
-2. Add restaurant owner authentication and a protected inventory dashboard.
-3. Implement atomic slot holds and booking confirmation to prevent double-booking.
-4. Add customer authentication, reservation history and cancellation rules.
-5. Add notifications (email/SMS/WhatsApp, subject to provider and cost).
-6. Add admin review, restaurant verification and booking reconciliation.
-7. Add analytics and production monitoring.
+1. Polish the guided customer, restaurant-partner and admin demonstration flows.
+2. Prepare a repeatable demo dataset and a short presentation walkthrough.
+3. Validate the prototype with a few restaurant owners and collect feedback.
+4. Keep payments, paid notifications and production infrastructure out of scope until validation.
 
 ## Product principles
 

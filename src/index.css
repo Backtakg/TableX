@@ -381,3 +381,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .admin-empty{padding:25px 5px;color:#929e92;font-size:10px}.admin-notice{font-size:10px;color:#65884e;background:#f2f7ed;padding:10px 12px;border-radius:8px}
 .admin-security-note{max-width:1200px;margin:14px auto 0;display:flex;align-items:center;gap:7px;color:#89968a;font-size:9px}
 @media(max-width:760px){.admin-page{padding:25px 15px 45px}.admin-header{align-items:flex-start;flex-direction:column}.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.admin-stats article{padding:13px}.admin-stats strong{font-size:23px}.admin-list-panel{padding:15px}.admin-list-heading{align-items:stretch;flex-direction:column}.admin-search input{width:100%;min-width:0}.admin-restaurant-card{grid-template-columns:minmax(0,1fr) auto;gap:9px}.admin-actions{grid-column:1/-1;justify-content:flex-start;padding-left:50px}.admin-login{padding:24px}}
+
+
+/* Persistent notice for safe prototype demonstrations. */
+.prototype-banner{min-height:32px;padding:7px 20px;display:flex;align-items:center;justify-content:center;gap:9px;background:#fff2df;color:#7b4b16;font-size:10px;font-weight:800;letter-spacing:.11em;text-align:center}.prototype-banner>span:last-child{font-weight:600;letter-spacing:0;color:#8b6842}.prototype-banner-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#d88a31;box-shadow:0 0 0 3px #f8dfbf}@media(max-width:600px){.prototype-banner{padding:7px 10px;flex-wrap:wrap;gap:5px;font-size:9px}.prototype-banner>span:last-child{width:100%;font-size:10px}}
